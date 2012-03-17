@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="docbook" default="doc">
+	<target name="doc">
+		<property name="docbook.dir" value="D:/Project/googlecode/lib/DocBook-Framework-1.0"/>
+		<mkdir dir="${basedir}/output"/>		
+		
+		<ant antfile="${docbook.dir}/build-docbook.xml" inheritAll="false">
+			<property name="dbf.basedir" value="${docbook.dir}"/>
+			<property name="docbook.dir" value=""/>
+			<property name="docbook.file" value="sample"/>
+
+			<property name="docbook.src.dir" value="${basedir}/src"/>
+			<property name="images.src.dir" value="${basedir}/images"/>
+			<property name="css.src.dir" value="${basedir}/css"/>
+			<property name="style.src.dir" value="${basedir}/style"/>
+			<property name="target.dir" value="${basedir}/output"/>
+
+			<target name="html"/>					
+			<target name="htmlsingle"/>
+			<target name="pdf"/>
+		</ant>
+	</target>
+</project>
