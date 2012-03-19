@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <bean id="dataSource"
+        class="com.mchange.v2.c3p0.ComboPooledDataSource"
+        destroy-method="close">
+        <property name="driverClass" value="com.mysql.jdbc.Driver" />
+        <property name="jdbcUrl"
+            value="jdbc:mysql://localhost:3306/test" />
+        <property name="user" value="root" />
+        <property name="password" value="fenriswolf" />
+        <property name="initialPoolSize" value="1" />
+        <property name="minPoolSize" value="1" />
+        <property name="maxPoolSize" value="10" />
+    </bean>
+
+    <bean id="myBean" class="com.fw.jmx.MyBean" />
+
+    <bean id="resourceBundleService"
+        class="com.fw.jmx.ResourceBundleServiceImpl">
+        <property name="baseName" value="env" />
+    </bean>
+    
+    <bean id="simpleJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="myBean" />
+        <property name="targetMethod" value="simpleRun" />
+    </bean>
+
+    <bean id="cronJobDetail"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="myBean" />
+        <property name="targetMethod" value="cronRun" />
+    </bean>
+
+    <bean id="simpleTrigger"
+        class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <!-- see the example of method invoking job above -->
+        <property name="jobDetail" ref="simpleJobDetail" />
+        <!-- 10 seconds -->
+        <property name="startDelay" value="10000" />
+        <!-- repeat every 50 seconds -->
+        <property name="repeatInterval" value="10000" />
+    </bean>
+
+    <bean id="cronTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerBean">
+        <property name="jobDetail" ref="cronJobDetail" />
+        <property name="cronExpression" value="0/15 * * * * ?" />
+    </bean>
+
+    <util:list id="triggers">
+        <ref local="simpleTrigger" />
+        <ref local="cronTrigger" />
+    </util:list>
+
+    <bean id="scheduler"
+        class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="schedulerName">
+            <value>FWScheduler</value>
+        </property>
+        <property name="triggers">
+            <ref local="triggers" />
+        </property>
+        <property name="overwriteExistingJobs">
+            <value>true</value>
+        </property>
+        <property name="autoStartup">
+            <value>true</value>
+        </property>
+    </bean>
+
+    <bean id="log4jMBean"
+        class="org.apache.log4j.jmx.HierarchyDynamicMBean" />
+
+    <bean
+        class="com.mchange.v2.c3p0.management.DynamicPooledDataSourceManagerMBean">
+        <constructor-arg ref="dataSource" />
+        <constructor-arg value="server:name=c3p0" />
+        <constructor-arg ref="mbeanServer" />
+    </bean>
+
+    <bean id="schedulerMBean" class="com.fw.jmx.quartz.SchedulerMBean">
+        <constructor-arg ref="scheduler" />
+        <constructor-arg ref="triggers" />
+    </bean>
+    
+    <bean id="xsltProcessor"
+        class="mx4j.tools.adaptor.http.XSLTProcessor" />
+
+    <bean id="httpAdaptor"
+        class="mx4j.tools.adaptor.http.HttpAdaptor">        
+        <property name="port" value="9001" />
+    </bean>
+
+    <!-- JDMK web 介面 
+    <bean id="htmlAdapter"
+        class="com.sun.jdmk.comm.HtmlAdaptorServer">
+        <property name="port" value="9001" />
+    </bean>
+     -->
+     
+    <bean id="mbeanServer"
+        class="org.springframework.jmx.support.MBeanServerFactoryBean">
+        <property name="locateExistingServerIfPossible" value="true" />
+    </bean>
+
+    <!-- weblogic mbean server
+    <bean id="mbeanServer"
+        class="org.springframework.jndi.JndiObjectFactoryBean">
+        <property name="jndiName" value="java:comp/env/jmx/runtime" />
+    </bean>
+     -->
+
+    <bean id="attributeSource"
+        class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource" />
+        
+    <bean id="assembler"
+        class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+        <property name="attributeSource" ref="attributeSource" />
+    </bean>
+    
+    <!-- interface assembler 
+    <bean id="assembler"
+        class="org.springframework.jmx.export.assembler.InterfaceBasedMBeanInfoAssembler">
+        <property name="interfaceMappings">
+            <props>
+                <prop key="resourceBundleService">
+                    com.fw.jmx.ResourceBundleServiceMBean
+                </prop>
+            </props>
+        </property>
+    </bean>
+    -->
+    
+    <!-- weblogic mbean mediator 
+    <bean id="mediator"
+        class="com.interface21.wl9.jmx.mediator.Mediator">
+        <property name="applicationName" value="jmxweb" />
+    </bean>
+     -->
+    
+    <bean id="exporter"
+        class="org.springframework.jmx.export.MBeanExporter">
+        <property name="beans">
+            <map>
+                <!-- 
+                <entry
+                    key="spring.framework:type=Mediator,application=jmxweb"
+                    value-ref="mediator" />
+                 -->
+                 
+                <entry key="server:name=log4j" value-ref="log4jMBean" />
+                <entry key="server:name=FWScheduler"
+                    value-ref="schedulerMBean" />
+                
+                <entry key="server:name=resourceBundleService"
+                    value-ref="resourceBundleService" />
+                    
+                <entry key="server:name=HttpAdaptor"
+                    value-ref="httpAdaptor" />
+                <entry key="server:name=XSLTProcessor"
+                    value-ref="xsltProcessor" />
+                
+                <!-- 
+                <entry key="server:name=htmlAdapter"
+                    value-ref="htmlAdapter" />
+                 -->
+            </map>
+        </property>
+        <property name="assembler" ref="assembler" />
+        <property name="server" ref="mbeanServer" />
+    </bean>
+</beans>
