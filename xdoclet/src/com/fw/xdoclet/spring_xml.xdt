@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+    default-lazy-init="true">
+<XDtClass:forAllClasses>
+    <bean id="<XDtSpringClass:springBeanName/>" class="<XDtClass:fullClassName/>">
+        <XDtSpringClass:ifIsDao>    
+        <property name="sessionFactory">
+            <ref bean="sessionFactory"/>
+        </property>
+        </XDtSpringClass:ifIsDao>
+        <XDtMethod:forAllMethods>
+        <XDtMethod:ifIsSetter>
+        <property name="<XDtMethod:propertyName/>">
+            <ref local="<XDtMethod:propertyName/>"/>
+        </property>
+        </XDtMethod:ifIsSetter>
+        </XDtMethod:forAllMethods>
+    </bean>
+</XDtClass:forAllClasses>
+</beans>
