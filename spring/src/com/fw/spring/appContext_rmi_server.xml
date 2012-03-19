@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<bean id="rmiServiceParent"
+		class="org.springframework.remoting.rmi.RmiServiceExporter"
+		abstract="true">
+		<property name="servicePort" value="${rmi.servicePort}" />
+		<property name="registryPort" value="${rmi.registryPort}" />
+	</bean>
+
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter"
+		parent="rmiServiceParent">
+		<property name="serviceName" value="ServiceA" />
+		<property name="service" ref="serviceA" />
+		<property name="serviceInterface"
+			value="com.fw.module.service.ServiceA" />
+	</bean>
+
+    <bean class="org.springframework.remoting.rmi.RmiServiceExporter"
+        parent="rmiServiceParent">
+        <property name="serviceName" value="ServiceB" />
+        <property name="service" ref="serviceB" />
+        <property name="serviceInterface"
+            value="com.fw.module.service.ServiceB" />
+    </bean>
+</beans>

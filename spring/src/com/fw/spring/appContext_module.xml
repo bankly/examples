@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<!--====================  DAO  ====================-->
+	<bean id="daoA" class="com.fw.module.dao.DaoAImpl" />
+
+	<bean id="daoB" class="com.fw.module.dao.DaoBImpl" />
+
+	<!--==================== Service ====================-->
+	<bean id="serviceA"
+		class="com.fw.module.service.ServiceAImpl">
+		<property name="daoA" ref="daoA" />
+	</bean>
+
+	<bean id="serviceB"
+		class="com.fw.module.service.ServiceBImpl">
+		<property name="daoB" ref="daoB" />
+	</bean>
+</beans>

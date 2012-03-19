@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+
+	<bean id="actionA" scope="prototype"
+		class="com.fw.module.action.ActionA">
+		<property name="serviceA" ref="serviceA" />
+	</bean>
+
+	<bean id="actionB" scope="prototype"
+		class="com.fw.module.action.ActionB">
+		<property name="serviceB" ref="serviceB" />
+	</bean>
+</beans>
