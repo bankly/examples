@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+	  
+	<title>Introduction</title>
+	<para>
+		DocBook is simple to use and provides a rich set of tags 
+		for common elements.
+	</para>  	
+</chapter>

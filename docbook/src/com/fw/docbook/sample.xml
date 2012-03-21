@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+	  
+  <title>DocBook Framework Overview</title>
+
+  <bookinfo>
+    <releaseinfo>V 1.0</releaseinfo>
+    <author>Fenris
+    </author>
+  </bookinfo>  
+  <toc/>
+  
+  <xi:include href="intro.xml" />
+  <xi:include href="content.xml" xpointer="basic" />  
+</book>

@@ -1,0 +1,13 @@
+<book version="5.0" xmlns="http://docbook.org/ns/docbook"
+      xmlns:xi="http://www.w3.org/2001/XInclude">
+	  
+	<chapter xml:id="basic">
+		<title>Basic Elements</title>
+		<para>This section describes the basic tags.</para>
+	</chapter>
+	
+	<chapter xml:id="advanced">
+		<title>Advanced Elements</title>
+		<para>This section describes the advanced tags.</para>
+	</chapter>
+</book>
